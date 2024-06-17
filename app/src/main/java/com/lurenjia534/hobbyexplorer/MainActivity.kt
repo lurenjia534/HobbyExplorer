@@ -5,19 +5,31 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.Card
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lurenjia534.hobbyexplorer.hobby.Hobby
@@ -31,7 +43,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             HobbyExplorerTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    floatingActionButton = { RefreshFAB() }
+                ) { innerPadding ->
                     MyApp(innerPadding)
                 }
             }
@@ -45,22 +60,45 @@ fun MyApp(innerPadding: PaddingValues) {
     val hobbyViewModel: HobbyViewModel = viewModel(
         factory = HobbyViewModelFactory(context.applicationContext as Application)
     )
-    val hobbies by hobbyViewModel.allHobbies.observeAsState(emptyList())
+    val displayedHobbies by hobbyViewModel.displayedHobbies.observeAsState(emptyList())
 
-    // 在这里展示 hobbies 列表
-    // 例如：LazyColumn { items(hobbies) { hobby -> Text(hobby.info) } }
-    LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(innerPadding)
-    ) {
-        items(hobbies) { hobby ->
-            Text(hobby.info ?: "Unknown")
+    LaunchedEffect(Unit) {
+        hobbyViewModel.updateDisplayedHobbies()
+    }
+
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(innerPadding)) {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            items(displayedHobbies) { hobby ->
+                HobbyCard(hobby)
+            }
         }
     }
 }
 
 @Composable
-fun HobbyItem(hobby: Hobby) {
-    // 在这里定义如何展示每个 Hobby 项目
-    // 例如：
-    androidx.compose.material3.Text(text = hobby.info ?: "No Info")
+fun RefreshFAB() {
+    val context = LocalContext.current
+    val hobbyViewModel: HobbyViewModel = viewModel(
+        factory = HobbyViewModelFactory(context.applicationContext as Application)
+    )
+
+    FloatingActionButton(onClick = {
+        hobbyViewModel.updateDisplayedHobbies()
+    }) {
+        Icon(imageVector = Icons.Default.Refresh, contentDescription = "刷新")
+    }
+}
+
+@Composable
+fun HobbyCard(hobby: Hobby) {
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .padding(8.dp)) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = hobby.info ?: "No Info")
+            // 添加其他需要显示的爱好信息
+        }
+    }
 }
