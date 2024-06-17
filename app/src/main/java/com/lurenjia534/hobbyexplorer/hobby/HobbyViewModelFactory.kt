@@ -10,7 +10,7 @@ class HobbyViewModelFactory(
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HobbyViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
+            @Suppress("UNCHECKED_CAST") // Safe to cast because `isAssignableFrom` check
             return HobbyViewModel(application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
