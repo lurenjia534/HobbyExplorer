@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -86,11 +87,11 @@ fun MyApp(innerPadding: PaddingValues) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    LinearProgressIndicator(color = Color.Black)
+                    LinearProgressIndicator(color = Color.Black, strokeCap = StrokeCap.Round)
                     Spacer(modifier = Modifier.padding(8.dp))
                     Text(text = "Loading..", style = TextStyle(
                         color = Color.Black,
-                        fontSize = 20.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Default
                     ))
