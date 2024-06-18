@@ -34,3 +34,9 @@ HobbyExplorer uses the following technologies and tools:
 - **Random Display**: Randomly display some hobbies to help users discover new interests.
 
 - **Back Function**: Users can return to the previous page using the back button.
+
+## Screenshots
+
+![Screenshot 1](image/1.png)
+![Screenshot 2](image/2.png)
+![Screenshot 3](image/3.png)

@@ -32,3 +32,9 @@ HobbyExplorer 使用了以下技术和工具：
 - **随机显示**：随机显示一些爱好，帮助用户发现新的兴趣。
 
 - **返回功能**：用户可以使用返回按钮返回到上一页。
+
+## 截图
+
+![Screenshot 1](image/1.png)
+![Screenshot 2](image/2.png)
+![Screenshot 3](image/3.png)
