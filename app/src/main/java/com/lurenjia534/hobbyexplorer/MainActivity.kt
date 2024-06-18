@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -35,6 +36,7 @@ import com.lurenjia534.hobbyexplorer.hobby.Hobby
 import com.lurenjia534.hobbyexplorer.hobby.HobbyViewModel
 import com.lurenjia534.hobbyexplorer.hobby.HobbyViewModelFactory
 import com.lurenjia534.hobbyexplorer.ui.theme.HobbyExplorerTheme
+import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -155,6 +157,7 @@ fun All(navController: NavHostController) {
     Text(text = "Profile Screen")
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreen(hobbyId: String) {
     val context = LocalContext.current
@@ -163,7 +166,8 @@ fun DetailsScreen(hobbyId: String) {
     )
     val hobby by hobbyViewModel.getHobbyById(hobbyId).observeAsState()
 
-    Scaffold { innerPadding ->
+    Scaffold(
+    ) { innerPadding ->
         hobby?.let {
             Column(
                 modifier = Modifier
@@ -173,6 +177,13 @@ fun DetailsScreen(hobbyId: String) {
                 Text(text = it.info ?: "No Info", style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold))
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = it.nicheInfo ?: "没内容", style = TextStyle(fontSize = 18.sp))
+                Text(text = it.contactTime ?: "没内容", style = TextStyle(fontSize = 18.sp))
+                Text(text = it.costCount ?: "没内容", style = TextStyle(fontSize = 18.sp))
+                Text(text = it.timeOfDay ?: "没内容", style = TextStyle(fontSize = 18.sp))
+                Text(text = it.level ?: "没内容", style = TextStyle(fontSize = 18.sp))
+                Text(text = it.levelVal.toString(), style = TextStyle(fontSize = 18.sp))
+                Text(text = it.putIntoCostLevel ?: "没内容", style = TextStyle(fontSize = 18.sp))
+                Text(text = it.putIntoTimeLevel ?: "没内容", style = TextStyle(fontSize = 18.sp))
             }
         } ?: run {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
