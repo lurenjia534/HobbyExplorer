@@ -20,6 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
@@ -66,7 +69,7 @@ fun MainScreen() {
 fun NavigationHost(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(navController = navController, startDestination = "all", modifier = modifier) {
         composable("all") { All(navController) }
-        composable("Search") { Search() }
+        composable("Search") { Search(navController) }
         composable("Star") { HomeScreen(navController) }
         composable("details/{hobbyId}") { backStackEntry ->
             val hobbyId = backStackEntry.arguments?.getString("hobbyId")
@@ -151,17 +154,45 @@ fun HobbyCard(hobby: Hobby, onClick: () -> Unit) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = hobby.info ?: "No Info")
-            Text(text = hobby.nicheInfo ?: "没内容")
+            Text(text = hobby.nicheInfo ?: "建议者太懒了,没有内容"  )
         }
     }
 }
 
 
 @Composable
-fun Search() {
-    Column {
-        Text(text = "Favorites Screen")
+fun Search(navController: NavHostController) {
+    val context = LocalContext.current
+    val hobbyViewModel: HobbyViewModel = viewModel(
+        factory = HobbyViewModelFactory(context.applicationContext as Application)
+    )
+    var query by remember { mutableStateOf("") }
+    val searchResults by hobbyViewModel.searchResults.observeAsState(emptyList())
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        TextField(
+            value = query,
+            onValueChange = {
+                query = it
+                hobbyViewModel.searchHobbies(query)
+            },
+            label = { Text("搜索爱好") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        LazyColumn {
+            items(searchResults) { hobby ->
+                HobbyCard(hobby, onClick = {
+                    navController.navigate("details/${hobby.id}")
+                })
+            }
+        }
     }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -257,7 +288,7 @@ fun DetailsScreen(hobbyId: String,navController: NavHostController) {
                         elevation = CardDefaults.cardElevation(2.dp)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            IpInfoText(label = "基本介绍", value = it.nicheInfo ?: "没内容")
+                            IpInfoText(label = "基本介绍", value = it.nicheInfo ?: "建议者太懒了,没有内容")
                         }
                     }
                     Spacer(modifier = Modifier.height(8.dp))

@@ -23,6 +23,10 @@ class HobbyViewModel(application: Application) : AndroidViewModel(application) {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private val _searchResults = MutableLiveData<List<Hobby>>()  // 新增
+    val searchResults: LiveData<List<Hobby>> = _searchResults  // 新增
+
+
     fun updateDisplayedHobbies() {
         viewModelScope.launch {
             _isLoading.value = true
@@ -34,5 +38,15 @@ class HobbyViewModel(application: Application) : AndroidViewModel(application) {
     }
     fun getHobbyById(hobbyId:String): LiveData<Hobby?> {
         return hobbyDao.getHobbyById(hobbyId)
+    }
+
+    fun searchHobbies(query: String) {
+       viewModelScope.launch {
+           viewModelScope.launch {
+               val allHobbiesList = hobbyDao.getAllHobbies().first()
+               _searchResults.postValue(allHobbiesList.filter { it.info?.contains(query, ignoreCase = true)
+                   ?: false })
+           }
+        }
     }
 }
