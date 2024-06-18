@@ -138,7 +138,7 @@ fun RefreshFAB(hobbyViewModel: HobbyViewModel) {
 
 @Composable
 fun HobbyCard(hobby: Hobby, onClick: () -> Unit) {
-    Card(
+    OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
@@ -221,7 +221,9 @@ fun DetailsScreen(hobbyId: String) {
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         OutlinedCard(
-                            modifier = Modifier.weight(1f).padding(8.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(8.dp),
                             elevation = CardDefaults.cardElevation(1.dp)
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
@@ -229,7 +231,9 @@ fun DetailsScreen(hobbyId: String) {
                             }
                         }
                         OutlinedCard(
-                            modifier = Modifier.weight(1f).padding(8.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(8.dp),
                             elevation = CardDefaults.cardElevation(1.dp)
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
@@ -242,7 +246,9 @@ fun DetailsScreen(hobbyId: String) {
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         OutlinedCard(
-                            modifier = Modifier.weight(1f).padding(8.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(8.dp),
                             elevation = CardDefaults.cardElevation(1.dp)
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
@@ -250,7 +256,9 @@ fun DetailsScreen(hobbyId: String) {
                             }
                         }
                         OutlinedCard(
-                            modifier = Modifier.weight(1f).padding(8.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(8.dp),
                             elevation = CardDefaults.cardElevation(1.dp)
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
@@ -312,6 +320,19 @@ fun DetailsScreen(hobbyId: String) {
                             IpInfoText(
                                 label = "投入时间级别",
                                 value = it.putIntoTimeLevel ?: "没内容"
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    OutlinedCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        elevation = CardDefaults.cardElevation(1.dp)
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            IpInfoText(
+                                label = "广泛性认知水平",
+                                value = it.cognitionCill ?: "没内容"
                             )
                         }
                     }
