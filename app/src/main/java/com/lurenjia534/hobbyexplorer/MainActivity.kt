@@ -73,6 +73,7 @@ fun NavigationHost(navController: NavHostController, modifier: Modifier = Modifi
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavHostController) {
     val context = LocalContext.current
@@ -88,6 +89,9 @@ fun HomeScreen(navController: NavHostController) {
 
     Scaffold(
         floatingActionButton = { RefreshFAB(hobbyViewModel) },
+        topBar = {
+            TopAppBar(title = { Text("随机挑选") })
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -218,7 +222,11 @@ fun DetailsScreen(hobbyId: String) {
     )
     val hobby by hobbyViewModel.getHobbyById(hobbyId).observeAsState()
 
-    Scaffold { innerPadding ->
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("喜欢这个爱好吗?") })
+        }
+    ) { innerPadding ->
         hobby?.let {
             LazyColumn(
                 modifier = Modifier
