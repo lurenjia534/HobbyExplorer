@@ -159,10 +159,35 @@ fun Search() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun All(navController: NavHostController) {
-    Text(text = "Profile Screen")
+    val context = LocalContext.current
+    val hobbyViewModel: HobbyViewModel = viewModel(
+        factory = HobbyViewModelFactory(context.applicationContext as Application)
+    )
+    val allHobbies by hobbyViewModel.allHobbies.observeAsState(emptyList())
+
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("所有爱好") })
+        }
+    ) { innerPadding ->
+        LazyColumn(
+            contentPadding = innerPadding,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            items(allHobbies) { hobby ->
+                HobbyCard(hobby, onClick = {
+                    navController.navigate("details/${hobby.id}")
+                })
+            }
+        }
+    }
 }
+
 
 @Composable
 fun IpInfoText(label: String, value: String) {
