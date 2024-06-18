@@ -28,7 +28,7 @@ class HobbyViewModel(application: Application) : AndroidViewModel(application) {
             _isLoading.value = true
             delay(500)  // 延迟0.5秒钟
             val hobbies = hobbyDao.getAllHobbies().first()
-            _displayedHobbies.postValue(hobbies.shuffled().take(3))
+            _displayedHobbies.postValue(hobbies.shuffled().take(10))
             _isLoading.value = false
         }
     }
