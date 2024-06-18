@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
@@ -68,7 +70,7 @@ fun NavigationHost(navController: NavHostController, modifier: Modifier = Modifi
         composable("Star") { HomeScreen(navController) }
         composable("details/{hobbyId}") { backStackEntry ->
             val hobbyId = backStackEntry.arguments?.getString("hobbyId")
-            hobbyId?.let { DetailsScreen(it) }
+            hobbyId?.let { DetailsScreen(it,navController) }
         }
     }
 }
@@ -138,7 +140,6 @@ fun RefreshFAB(hobbyViewModel: HobbyViewModel) {
         Icon(imageVector = Icons.Default.Refresh, contentDescription = "刷新")
     }
 }
-
 
 @Composable
 fun HobbyCard(hobby: Hobby, onClick: () -> Unit) {
@@ -213,9 +214,19 @@ fun IpInfoText(label: String, value: String) {
     }
 }
 
+@Composable
+fun BackButton(navController: NavHostController) {
+    FloatingActionButton(onClick = {
+        navController.popBackStack()
+    }) {
+        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "上一页")
+    }
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailsScreen(hobbyId: String) {
+fun DetailsScreen(hobbyId: String,navController: NavHostController) {
     val context = LocalContext.current
     val hobbyViewModel: HobbyViewModel = viewModel(
         factory = HobbyViewModelFactory(context.applicationContext as Application)
@@ -225,7 +236,8 @@ fun DetailsScreen(hobbyId: String) {
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("喜欢这个爱好吗?") })
-        }
+        },
+        floatingActionButton = { BackButton(navController) }
     ) { innerPadding ->
         hobby?.let {
             LazyColumn(
