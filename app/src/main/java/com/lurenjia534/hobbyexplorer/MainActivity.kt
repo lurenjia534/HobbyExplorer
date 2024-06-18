@@ -6,6 +6,7 @@ import android.telecom.Call.Details
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
@@ -146,19 +148,32 @@ fun RefreshFAB(hobbyViewModel: HobbyViewModel) {
 
 @Composable
 fun HobbyCard(hobby: Hobby, onClick: () -> Unit) {
-    OutlinedCard(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .clickable(onClick = onClick)
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .clickable(onClick = onClick),
+        elevation = CardDefaults.cardElevation(2.dp),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(
+            MaterialTheme.colorScheme.surface,
+        )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = hobby.info ?: "No Info")
-            Text(text = hobby.nicheInfo ?: "建议者太懒了,没有内容"  )
+            Text(
+                text = hobby.info ?: "No Info",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = hobby.nicheInfo ?: "没内容",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
-
 
 @Composable
 fun Search(navController: NavHostController) {
@@ -174,17 +189,24 @@ fun Search(navController: NavHostController) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        TextField(
+        OutlinedTextField(
             value = query,
             onValueChange = {
                 query = it
                 hobbyViewModel.searchHobbies(query)
             },
             label = { Text("搜索爱好") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White),
+            singleLine = true,
+            shape = MaterialTheme.shapes.medium
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        LazyColumn {
+        Spacer(modifier = Modifier.height(16.dp))
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxSize()
+        ) {
             items(searchResults) { hobby ->
                 HobbyCard(hobby, onClick = {
                     navController.navigate("details/${hobby.id}")
@@ -192,7 +214,6 @@ fun Search(navController: NavHostController) {
             }
         }
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
