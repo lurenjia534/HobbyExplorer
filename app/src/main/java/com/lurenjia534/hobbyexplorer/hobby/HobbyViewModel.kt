@@ -32,4 +32,7 @@ class HobbyViewModel(application: Application) : AndroidViewModel(application) {
             _isLoading.value = false
         }
     }
+    fun getHobbyById(hobbyId:String): LiveData<Hobby?> {
+        return hobbyDao.getHobbyById(hobbyId)
+    }
 }

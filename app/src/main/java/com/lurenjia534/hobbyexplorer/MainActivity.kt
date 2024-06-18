@@ -2,9 +2,11 @@ package com.lurenjia534.hobbyexplorer
 
 import android.app.Application
 import android.os.Bundle
+import android.telecom.Call.Details
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -59,14 +61,18 @@ fun MainScreen() {
 @Composable
 fun NavigationHost(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(navController = navController, startDestination = "all", modifier = modifier) {
-        composable("all") { All() }
+        composable("all") { All(navController) }
         composable("Search") { Search() }
-        composable("Star") { HomeScreen() }
+        composable("Star") { HomeScreen(navController) }
+        composable("details/{hobbyId}") { backStackEntry ->
+            val hobbyId = backStackEntry.arguments?.getString("hobbyId")
+            hobbyId?.let { DetailsScreen(it) }
+        }
     }
 }
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavHostController) {
     val context = LocalContext.current
     val hobbyViewModel: HobbyViewModel = viewModel(
         factory = HobbyViewModelFactory(context.applicationContext as Application)
@@ -103,7 +109,9 @@ fun HomeScreen() {
             } else {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(displayedHobbies) { hobby ->
-                        HobbyCard(hobby)
+                        HobbyCard(hobby, onClick = {
+                            navController.navigate("details/${hobby.id}")
+                        })
                     }
                 }
             }
@@ -120,17 +128,20 @@ fun RefreshFAB(hobbyViewModel: HobbyViewModel) {
     }
 }
 
+
 @Composable
-fun HobbyCard(hobby: Hobby) {
+fun HobbyCard(hobby: Hobby, onClick: () -> Unit) {
     Card(modifier = Modifier
         .fillMaxWidth()
-        .padding(8.dp)) {
+        .padding(8.dp)
+        .clickable(onClick = onClick)) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = hobby.info ?: "No Info")
             Text(text = hobby.nicheInfo ?: "没内容")
         }
     }
 }
+
 
 @Composable
 fun Search() {
@@ -140,6 +151,33 @@ fun Search() {
 }
 
 @Composable
-fun All() {
+fun All(navController: NavHostController) {
     Text(text = "Profile Screen")
+}
+
+@Composable
+fun DetailsScreen(hobbyId: String) {
+    val context = LocalContext.current
+    val hobbyViewModel: HobbyViewModel = viewModel(
+        factory = HobbyViewModelFactory(context.applicationContext as Application)
+    )
+    val hobby by hobbyViewModel.getHobbyById(hobbyId).observeAsState()
+
+    Scaffold { innerPadding ->
+        hobby?.let {
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+            ) {
+                Text(text = it.info ?: "No Info", style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold))
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = it.nicheInfo ?: "没内容", style = TextStyle(fontSize = 18.sp))
+            }
+        } ?: run {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Loading...")
+            }
+        }
+    }
 }
