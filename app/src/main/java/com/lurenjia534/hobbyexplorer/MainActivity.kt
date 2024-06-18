@@ -193,13 +193,13 @@ fun DetailsScreen(hobbyId: String) {
     )
     val hobby by hobbyViewModel.getHobbyById(hobbyId).observeAsState()
 
-    Scaffold(
-    ) { innerPadding ->
+    Scaffold { innerPadding ->
         hobby?.let {
             LazyColumn(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
+                    .padding(16.dp)
             ) {
                 item {
                     Text(
@@ -207,12 +207,11 @@ fun DetailsScreen(hobbyId: String) {
                         style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Card(
+                    OutlinedCard(
                         modifier = Modifier.fillMaxWidth(),
+                        elevation = CardDefaults.cardElevation(2.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.padding(32.dp)
-                        ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
                             IpInfoText(label = "基本介绍", value = it.nicheInfo ?: "没内容")
                         }
                     }
@@ -220,21 +219,20 @@ fun DetailsScreen(hobbyId: String) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
-
                     ) {
-                        Card(
+                        OutlinedCard(
+                            modifier = Modifier.weight(1f).padding(8.dp),
+                            elevation = CardDefaults.cardElevation(1.dp)
                         ) {
-                            Column(
-                                modifier = Modifier.padding(32.dp)
-                            ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
                                 IpInfoText(label = "时间成本", value = it.contactTime ?: "没内容")
                             }
                         }
-                        Card(
+                        OutlinedCard(
+                            modifier = Modifier.weight(1f).padding(8.dp),
+                            elevation = CardDefaults.cardElevation(1.dp)
                         ) {
-                            Column(
-                                modifier = Modifier.padding(32.dp)
-                            ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
                                 IpInfoText(label = "兴趣花销", value = it.costCount ?: "没内容")
                             }
                         }
@@ -242,21 +240,20 @@ fun DetailsScreen(hobbyId: String) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
-
                     ) {
-                        Card(
+                        OutlinedCard(
+                            modifier = Modifier.weight(1f).padding(8.dp),
+                            elevation = CardDefaults.cardElevation(1.dp)
                         ) {
-                            Column(
-                                modifier = Modifier.padding(32.dp)
-                            ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
                                 IpInfoText(label = "一天需要时间", value = it.timeOfDay ?: "没内容")
                             }
                         }
-                        Card(
+                        OutlinedCard(
+                            modifier = Modifier.weight(1f).padding(8.dp),
+                            elevation = CardDefaults.cardElevation(1.dp)
                         ) {
-                            Column(
-                                modifier = Modifier.padding(32.dp)
-                            ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
                                 IpInfoText(
                                     label = "建议者自我认知水准",
                                     value = it.level ?: "没内容"
@@ -265,10 +262,13 @@ fun DetailsScreen(hobbyId: String) {
                         }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    Card() {
+                    OutlinedCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        elevation = CardDefaults.cardElevation(1.dp)
+                    ) {
                         Column(modifier = Modifier
                             .fillMaxWidth()
-                            .padding(32.dp)) {
+                            .padding(16.dp)) {
                             Text(
                                 text = "建议者自我认知水准可视化",
                                 style = MaterialTheme.typography.bodyMedium,
@@ -281,39 +281,45 @@ fun DetailsScreen(hobbyId: String) {
                                 progress = { (it.levelVal?.div(4f))?.toFloat() ?: 0f },
                                 modifier = Modifier.fillMaxWidth()
                             )
+                            Text(
+                                text = "等级值: ${it.levelVal}/4",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily.Default,
+                                modifier = Modifier.align(Alignment.End)
+                            )
                         }
                     }
-                    Card(
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedCard(
                         modifier = Modifier.fillMaxWidth(),
+                        elevation = CardDefaults.cardElevation(1.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.padding(32.dp)
-                        ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
                             IpInfoText(
                                 label = "投入成本水平",
                                 value = it.putIntoCostLevel ?: "没内容"
                             )
                         }
                     }
-                    Card(
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedCard(
                         modifier = Modifier.fillMaxWidth(),
+                        elevation = CardDefaults.cardElevation(1.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.padding(32.dp)
-                        ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
                             IpInfoText(
                                 label = "投入时间级别",
                                 value = it.putIntoTimeLevel ?: "没内容"
                             )
                         }
                     }
-                    //     Text(text = it.putIntoCostLevel ?: "没内容", style = TextStyle(fontSize = 18.sp))
-                    //     Text(text = it.putIntoTimeLevel ?: "没内容", style = TextStyle(fontSize = 18.sp))
                 }
-            } ?: run {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "Loading...")
-                }
+            }
+        } ?: run {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Loading...")
             }
         }
     }
