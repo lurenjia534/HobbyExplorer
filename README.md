@@ -2,6 +2,8 @@
 
 HobbyExplorer is an Android app designed to help users discover and manage their hobbies. Users can view, search, and add new hobbies, and can click to view detailed information about each hobby.
 
+[点击这里查看中文版 README](zh_README.md)
+
 ## Purpose
 
 The main purpose of the app is to provide a platform for users to easily record and manage their hobby information. Through the app, users can:
