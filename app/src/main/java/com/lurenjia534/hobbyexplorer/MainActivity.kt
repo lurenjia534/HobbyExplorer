@@ -160,17 +160,7 @@ fun HobbyCard(hobby: Hobby, onClick: () -> Unit) {
         )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = hobby.info ?: "No Info",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = hobby.nicheInfo ?: "没内容",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            IpInfoText(label = hobby.info ?: "No Info", value = hobby.nicheInfo ?: "建议者太懒了,没有介绍该爱好")
         }
     }
 }
