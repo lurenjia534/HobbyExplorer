@@ -55,4 +55,13 @@ class HobbyViewModel(application: Application) : AndroidViewModel(application) {
            }
         }
     }
+
+    fun saveCurrentHobbyId(hobbyId: String) {
+      return sharePreferences.edit().putString("current_hobby_id", hobbyId).apply()
+    }
+
+    fun getCurrentHobbyId(): String? {
+        return sharePreferences.getString("current_hobby_id", null)
+    }
+
 }
