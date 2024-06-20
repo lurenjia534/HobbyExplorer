@@ -31,6 +31,8 @@ class HobbyViewModel(application: Application) : AndroidViewModel(application) {
         get() = sharePreferences.getInt("scroll_position", 0)
         set(value) = sharePreferences.edit().putInt("scroll_position", value).apply()
 
+    var isDataLoaded = false
+
     fun updateDisplayedHobbies() {
         viewModelScope.launch {
             _isLoading.value = true

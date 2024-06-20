@@ -92,9 +92,12 @@ fun HomeScreen(navController: NavHostController) {
     )
     val displayedHobbies by hobbyViewModel.displayedHobbies.observeAsState(emptyList())
     val isLoading by hobbyViewModel.isLoading.observeAsState(false)
-
+ // 通过 LaunchedEffect 来确保只有在第一次加载时才会调用 updateDisplayedHobbies
     LaunchedEffect(Unit) {
-        hobbyViewModel.updateDisplayedHobbies()
+        if (!hobbyViewModel.isDataLoaded){
+            hobbyViewModel.updateDisplayedHobbies()
+            hobbyViewModel.isDataLoaded = true
+        }
     }
 
     Scaffold(
@@ -126,6 +129,7 @@ fun HomeScreen(navController: NavHostController) {
                             )
                         )
                     }
+
                 }
             } else {
 
@@ -158,6 +162,7 @@ fun HomeScreen(navController: NavHostController) {
 fun RefreshFAB(hobbyViewModel: HobbyViewModel) {
     FloatingActionButton(onClick = {
         hobbyViewModel.updateDisplayedHobbies()
+        hobbyViewModel.isDataLoaded = true
     }) {
         Icon(imageVector = Icons.Default.Refresh, contentDescription = "刷新")
     }
