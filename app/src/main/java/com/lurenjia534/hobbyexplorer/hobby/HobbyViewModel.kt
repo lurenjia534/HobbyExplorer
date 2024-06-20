@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 
 class HobbyViewModel(application: Application) : AndroidViewModel(application) {
     private val hobbyDao = HobbyDatabase.getDatabase(application).hobbyDao()
+    private val sharePreferences = application.getSharedPreferences("HobbyPrefs", 0)
 
     val allHobbies: LiveData<List<Hobby>> = hobbyDao.getAllHobbies().asLiveData()
 
@@ -26,6 +27,9 @@ class HobbyViewModel(application: Application) : AndroidViewModel(application) {
     private val _searchResults = MutableLiveData<List<Hobby>>()  // 新增
     val searchResults: LiveData<List<Hobby>> = _searchResults  // 新增
 
+    var scrollPosition: Int
+        get() = sharePreferences.getInt("scroll_position", 0)
+        set(value) = sharePreferences.edit().putInt("scroll_position", value).apply()
 
     fun updateDisplayedHobbies() {
         viewModelScope.launch {

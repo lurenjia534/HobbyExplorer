@@ -11,6 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
@@ -23,7 +24,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -125,7 +128,21 @@ fun HomeScreen(navController: NavHostController) {
                     }
                 }
             } else {
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
+
+                val listState = rememberLazyListState(initialFirstVisibleItemIndex = hobbyViewModel.scrollPosition)
+
+                LaunchedEffect(listState) {
+                    snapshotFlow { listState.firstVisibleItemIndex }
+                        .collect { index ->
+                            hobbyViewModel.scrollPosition = index
+                        }
+
+                }
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    state = listState
+                    ) {
                     items(displayedHobbies) { hobby ->
                         HobbyCard(hobby, onClick = {
                             navController.navigate("details/${hobby.id}")
@@ -219,7 +236,18 @@ fun All(navController: NavHostController) {
             TopAppBar(title = { Text("所有爱好") })
         }
     ) { innerPadding ->
+
+        val listState = rememberLazyListState(initialFirstVisibleItemIndex = hobbyViewModel.scrollPosition)
+
+        LaunchedEffect(listState) {
+            snapshotFlow { listState.firstVisibleItemIndex }
+                .collect { index ->
+                    hobbyViewModel.scrollPosition = index
+                }
+        }
+
         LazyColumn(
+            state = listState,
             contentPadding = innerPadding,
             modifier = Modifier
                 .fillMaxSize()
