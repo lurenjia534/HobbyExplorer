@@ -148,12 +148,12 @@ fun RefreshFAB(hobbyViewModel: HobbyViewModel) {
 
 @Composable
 fun HobbyCard(hobby: Hobby, onClick: () -> Unit) {
-    Card(
+    OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 4.dp)
             .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(2.dp),
+        elevation = CardDefaults.cardElevation(1.dp),
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(
             MaterialTheme.colorScheme.surface,
@@ -197,8 +197,7 @@ fun Search(navController: NavHostController) {
             },
             label = { Text("搜索爱好") },
             modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White),
+                .fillMaxWidth(),
             singleLine = true,
             shape = MaterialTheme.shapes.medium
         )
