@@ -41,6 +41,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.lurenjia534.hobbyexplorer.common.BackButton
+import com.lurenjia534.hobbyexplorer.common.HobbyCard
+import com.lurenjia534.hobbyexplorer.common.IpInfoText
+import com.lurenjia534.hobbyexplorer.common.RefreshFAB
 import com.lurenjia534.hobbyexplorer.hobby.Hobby
 import com.lurenjia534.hobbyexplorer.hobby.HobbyViewModel
 import com.lurenjia534.hobbyexplorer.hobby.HobbyViewModelFactory
@@ -168,35 +172,6 @@ fun HomeScreen(navController: NavHostController) {
 }
 
 @Composable
-fun RefreshFAB(hobbyViewModel: HobbyViewModel) {
-    FloatingActionButton(onClick = {
-        hobbyViewModel.updateDisplayedHobbies()
-        hobbyViewModel.isDataLoaded = true
-    }) {
-        Icon(imageVector = Icons.Default.Refresh, contentDescription = "刷新")
-    }
-}
-
-@Composable
-fun HobbyCard(hobby: Hobby, onClick: () -> Unit) {
-    OutlinedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-            .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(1.dp),
-        shape = MaterialTheme.shapes.medium,
-        colors = CardDefaults.cardColors(
-            MaterialTheme.colorScheme.surface,
-        )
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            IpInfoText(label = hobby.info ?: "No Info", value = hobby.nicheInfo ?: "建议者太懒了,没有介绍该爱好")
-        }
-    }
-}
-
-@Composable
 fun Search(navController: NavHostController) {
     val context = LocalContext.current
     val hobbyViewModel: HobbyViewModel = viewModel(
@@ -293,39 +268,6 @@ fun All(navController: NavHostController) {
         }
     }
 }
-
-
-
-
-@Composable
-fun IpInfoText(label: String, value: String) {
-    Column {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Default
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-            fontWeight = FontWeight.Normal,
-            fontFamily = FontFamily.Default
-        )
-    }
-}
-
-@Composable
-fun BackButton(navController: NavHostController) {
-    FloatingActionButton(onClick = {
-        navController.popBackStack()
-    }) {
-        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "上一页")
-    }
-}
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
