@@ -12,14 +12,19 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -40,6 +45,7 @@ import com.lurenjia534.hobbyexplorer.hobby.Hobby
 import com.lurenjia534.hobbyexplorer.hobby.HobbyViewModel
 import com.lurenjia534.hobbyexplorer.hobby.HobbyViewModelFactory
 import com.lurenjia534.hobbyexplorer.ui.theme.HobbyExplorerTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -238,14 +244,32 @@ fun All(navController: NavHostController) {
         factory = HobbyViewModelFactory(context.applicationContext as Application)
     )
     val allHobbies by hobbyViewModel.allHobbies.observeAsState(emptyList())
+    val listState = rememberLazyListState(initialFirstVisibleItemIndex = hobbyViewModel.scrollPosition)
+    val coroutineScope = rememberCoroutineScope()
+
+    val isAtTop = remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
 
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("所有爱好") })
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                coroutineScope.launch {
+                    if (isAtTop.value) {
+                        listState.animateScrollToItem(allHobbies.size - 1)
+                    } else {
+                        listState.animateScrollToItem(0)
+                    }
+                }
+            }) {
+                Icon(
+                    imageVector = if (isAtTop.value) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
+                    contentDescription = if (isAtTop.value) "Scroll to bottom" else "Scroll to top"
+                )
+            }
         }
     ) { innerPadding ->
-
-        val listState = rememberLazyListState(initialFirstVisibleItemIndex = hobbyViewModel.scrollPosition)
 
         LaunchedEffect(listState) {
             snapshotFlow { listState.firstVisibleItemIndex }
@@ -269,6 +293,8 @@ fun All(navController: NavHostController) {
         }
     }
 }
+
+
 
 
 @Composable
