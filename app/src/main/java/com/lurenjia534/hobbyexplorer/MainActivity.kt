@@ -2,11 +2,9 @@ package com.lurenjia534.hobbyexplorer
 
 import android.app.Application
 import android.os.Bundle
-import android.telecom.Call.Details
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,8 +12,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -24,12 +20,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
@@ -46,7 +40,6 @@ import com.lurenjia534.hobbyexplorer.hobby.Hobby
 import com.lurenjia534.hobbyexplorer.hobby.HobbyViewModel
 import com.lurenjia534.hobbyexplorer.hobby.HobbyViewModelFactory
 import com.lurenjia534.hobbyexplorer.ui.theme.HobbyExplorerTheme
-import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,15 +47,25 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             HobbyExplorerTheme {
-                MainScreen()
+                val navController = rememberNavController()
+                val hobbyViewModel: HobbyViewModel = viewModel(
+                    factory = HobbyViewModelFactory(application)
+                )
+
+                LaunchedEffect(Unit) {
+                    val saveHobbyId = hobbyViewModel.getCurrentHobbyId()
+                    if (saveHobbyId != null) {
+                        navController.navigate("details/$saveHobbyId")
+                    }
+                }
+                MainScreen(navController, hobbyViewModel)
             }
         }
     }
 }
 
 @Composable
-fun MainScreen() {
-    val navController = rememberNavController()
+fun MainScreen(navController: NavHostController, hobbyViewModel: HobbyViewModel) {
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
@@ -306,6 +309,10 @@ fun DetailsScreen(hobbyId: String,navController: NavHostController) {
         factory = HobbyViewModelFactory(context.applicationContext as Application)
     )
     val hobby by hobbyViewModel.getHobbyById(hobbyId).observeAsState()
+
+    LaunchedEffect(hobbyId) {
+        hobbyViewModel.saveCurrentHobbyId(hobbyId)
+    }
 
     Scaffold(
         topBar = {
