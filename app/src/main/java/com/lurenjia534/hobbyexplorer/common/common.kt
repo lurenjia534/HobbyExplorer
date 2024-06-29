@@ -19,7 +19,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.lurenjia534.hobbyexplorer.IpInfoText
 import com.lurenjia534.hobbyexplorer.hobby.Hobby
 import com.lurenjia534.hobbyexplorer.hobby.HobbyViewModel
 
