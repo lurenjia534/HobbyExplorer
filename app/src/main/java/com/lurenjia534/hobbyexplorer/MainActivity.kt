@@ -119,7 +119,13 @@ fun HomeScreen(navController: NavHostController) {
     Scaffold(
         floatingActionButton = { RefreshFAB(hobbyViewModel) },
         topBar = {
-            TopAppBar(title = { Text("随机挑选") })
+            TopAppBar(title = { Text("随机挑选", style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Default,
+                color = MaterialTheme.colorScheme.primary
+            )
+            ) })
         }
     ) { innerPadding ->
         Column(
@@ -130,7 +136,7 @@ fun HomeScreen(navController: NavHostController) {
             if (isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        LinearProgressIndicator(
+                        CircularProgressIndicator(
                             color = MaterialTheme.colorScheme.primary,
                             strokeCap = StrokeCap.Round
                         )
@@ -235,7 +241,13 @@ fun All(navController: NavHostController) {
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("所有爱好") })
+            TopAppBar(title = { Text("所有爱好", style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Default,
+                color = MaterialTheme.colorScheme.primary
+            )
+            ) })
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
@@ -293,7 +305,13 @@ fun DetailsScreen(hobbyId: String,navController: NavHostController) {
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("喜欢这个爱好吗?") })
+            TopAppBar(title = { Text("喜欢这个爱好吗?", style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Default,
+                color = MaterialTheme.colorScheme.primary
+            )
+            ) })
         },
         floatingActionButton = { BackButton(navController) }
     ) { innerPadding ->
