@@ -55,6 +55,7 @@ android {
 dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.material3.android)
     val room_version = "2.6.1"
 
     implementation("androidx.room:room-runtime:$room_version")
@@ -82,7 +83,7 @@ dependencies {
 
     // optional - Paging 3 Integration
     implementation("androidx.room:room-paging:$room_version")
-    implementation("androidx.compose.material3:material3:1.3.0-beta03")  // 用于实现Material Design风格的UI
+    implementation("androidx.compose.material:material:1.6.8")  // 用于实现Material Design风格的UI
     implementation("androidx.compose.material3:material3-window-size-class:1.2.1") // 用于适配窗口大小
     implementation("androidx.navigation:navigation-compose:2.7.7")  // 库的作用是实现页面之间的跳转
     implementation(libs.androidx.core.ktx)
